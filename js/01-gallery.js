@@ -27,18 +27,27 @@ function handlerCLick(evt) {
   if (!evt.target.classList.contains("gallery__image")) {
     return;
   }
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
 	<img src="${evt.target.dataset.source}" alt="${evt.target.alt}"/>
     
-`);
+`,
+    {
+      onShow: (instance) => {
+        document.addEventListener("keydown", handlerClose);
+      },
+      onClose: (instance) => {
+        document.removeEventListener("keydown", handlerClose);
+      },
+    }
+  );
 
   instance.show();
-
-  document.addEventListener("keydown", handlerClose);
 
   function handlerClose(evt) {
     if (evt.code === "Escape") {
       instance.close();
+      console.log(evt.code);
     }
   }
 }
